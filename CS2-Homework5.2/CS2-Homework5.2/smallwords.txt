@@ -1,0 +1,5 @@
+act
+camino
+cat
+rat
+tac

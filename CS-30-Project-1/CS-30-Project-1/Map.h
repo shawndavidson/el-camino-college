@@ -5,14 +5,19 @@
 //  Created by Shawn Davidson on 2/28/22.
 //
 
-#ifndef Map_hpp
-#define Map_hpp
+#ifndef Map_h
+#define Map_h
 
 #include <iostream>
+#include <string>
 
-using KeyType = std::string;
+using KeyType   = std::string;
 using ValueType = double;
 
+
+///////////////////////////////////////////////////////////////////////////////
+/// Map
+///////////////////////////////////////////////////////////////////////////////
 class Map
 {
   public:
@@ -67,7 +72,7 @@ class Map
     void swap(Map& other);
       // Exchange the contents of this map with the other one.
     
-    void dump();
+    void dump() const;
       // Dump debugging info to the error stream
     
     Map& operator=(const Map& rhs);
@@ -103,8 +108,15 @@ private:
       // Helper to get a node by index that uses recursion
     bool erase(Node*& node, const KeyType& key);
       // Helper to erase a node that uses recursion
-    void dump(const Node* node);
+    void dump(const Node* node) const;
       // Helper to dumb that uses recursion
 };
 
-#endif /* Map_hpp */
+///////////////////////////////////////////////////////////////////////////////
+/// Non-Member Functions
+///////////////////////////////////////////////////////////////////////////////
+bool combine(const Map& m1, const Map& m2, Map& result);
+
+void subtract(const Map& m1, const Map& m2, Map& result);
+
+#endif /* Map_h */

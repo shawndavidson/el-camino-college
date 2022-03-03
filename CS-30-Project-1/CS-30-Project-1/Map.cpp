@@ -127,7 +127,7 @@ bool Map::insert(Node*& node, const KeyType& key, const ValueType& value, bool u
     return false;
 }
 
-void Map::dump() {
+void Map::dump() const {
     cerr << endl;
 
     dump(m_pRoot);
@@ -135,7 +135,7 @@ void Map::dump() {
     cerr << endl;
 }
 
-void Map::dump(const Node* node) {
+void Map::dump(const Node* node) const {
     if (node == nullptr)
         return;
         
@@ -261,14 +261,65 @@ bool Map::erase(Node*& node, const KeyType& key) {
     // Invariant: The node must have two children
     // Replace this node with the key-value from the largest node from the left subtree
     Node* maxLeftDescendent         = node->left;
-    
+
     while (maxLeftDescendent->right != nullptr) {
         maxLeftDescendent       = maxLeftDescendent->right;
     }
-    
+
     node->key   = maxLeftDescendent->key;
     node->value = maxLeftDescendent->value;
-    
-    // Recursively delete the node since we've taken it's value. It should only have 1 child at the most.
+
+    // Recursively delete the largest descendent from the left subtree since we've taken on it's value. It should only have 1 child at the most.
     return erase(node->left, maxLeftDescendent->key);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+/// Non-Member Functions
+///////////////////////////////////////////////////////////////////////////////
+// Combine key-value pairs from m1 and m2
+// result = m1 + m2
+bool combine(const Map& m1, const Map& m2, Map& result) {
+    // O(N)
+    result = Map(m1);
+    
+    bool hasDuplicateKey = false;
+    
+    KeyType     key;
+    ValueType   value;
+    
+    int m2Size = m2.size(); // O(N)
+
+    for (int i = 0; i < m2Size; i++) { // O(N)
+        if (!m2.get(i, key, value)) { // O(log N)
+            // What do I do? Throw?
+        }
+        
+        if (!result.insert(key, value)) // O(log N)
+            hasDuplicateKey = true;
+    }
+    
+    return !hasDuplicateKey;
+}
+
+// Subtract key-value pairs in m2 from m1
+// result = m1 - m2
+void subtract(const Map& m1, const Map& m2, Map& result) {
+    result = Map(m1); // O(N)
+    
+    KeyType     key;
+    ValueType   value;
+    
+    int m2Size = m2.size(); // O(N)
+
+    for (int i = 0; i < m2Size; i++) { // O(N)
+        if (!m2.get(i, key, value)) { // O(log N)
+            // What do I do? Throw?
+        }
+        
+        if (!result.erase(key)) { // O(log N)
+            // What do I do? Throw?
+        }
+    }
+
+    return;
 }

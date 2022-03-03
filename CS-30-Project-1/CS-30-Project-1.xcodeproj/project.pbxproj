@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8751F0A427CD7B73001F80BE /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8751F0A327CD7B73001F80BE /* main.cpp */; };
 		8751F0AC27CD7B90001F80BE /* Map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8751F0AA27CD7B90001F80BE /* Map.cpp */; };
+		878864C127D12B4100E73DD8 /* mainTestInt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 878864BF27D12B4000E73DD8 /* mainTestInt.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +29,7 @@
 		8751F0A327CD7B73001F80BE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8751F0AA27CD7B90001F80BE /* Map.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Map.cpp; sourceTree = "<group>"; };
 		8751F0AB27CD7B90001F80BE /* Map.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Map.h; sourceTree = "<group>"; };
+		878864BF27D12B4000E73DD8 /* mainTestInt.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = mainTestInt.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				8751F0A327CD7B73001F80BE /* main.cpp */,
+				878864BF27D12B4000E73DD8 /* mainTestInt.cpp */,
 				8751F0AA27CD7B90001F80BE /* Map.cpp */,
 				8751F0AB27CD7B90001F80BE /* Map.h */,
 			);
@@ -126,6 +129,7 @@
 			files = (
 				8751F0AC27CD7B90001F80BE /* Map.cpp in Sources */,
 				8751F0A427CD7B73001F80BE /* main.cpp in Sources */,
+				878864C127D12B4100E73DD8 /* mainTestInt.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

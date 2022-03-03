@@ -17,7 +17,7 @@ class Map
 {
   public:
     Map();              // Create an empty map (i.e., one with no key/value pairs)
-
+    Map(const Map& rhs);// Copy Constructor
     ~Map();             // Destructor - free dynamically allocated memory
     
     bool empty() const; // Return true if the map is empty, otherwise false.
@@ -70,12 +70,15 @@ class Map
     void dump();
       // Dump debugging info to the error stream
     
+    Map& operator=(const Map& rhs);
+      // Assignment Operator
+    
     // Private Data Member(s)
 private:
     // Node definition for a BST (Binary Search Tree)
     struct Node {
-        Node(const KeyType& key = KeyType(), const ValueType& value = ValueType()) : key(key), value(value), left(nullptr), right(nullptr) {};
         // Constructor
+        Node(const KeyType& key = KeyType(), const ValueType& value = ValueType()) : key(key), value(value), left(nullptr), right(nullptr) {};
 
         KeyType     key;
         ValueType   value;
@@ -88,12 +91,18 @@ private:
     
     // Private Member(s)
 private:
+    void copy(Node*& node, const Node* otherNode);
+      // Helper to deep copy another Map recursively
     void deallocate(Map::Node* node);
-      // Release dynamically allocated memory for all nodes
+      // Helper to release all memory for all nodes recursively
     bool insert(Node*& node, const KeyType& key, const ValueType& value, bool updateIfPresent);
       // Helper to insert a node that uses recursion
     bool get(const Node* node, const KeyType& key, ValueType& value) const;
       // Helper to get a node that uses recursion
+    bool get(Node* node, int& currentIndex, int targetIndex, KeyType& key, ValueType& value) const;
+      // Helper to get a node by index that uses recursion
+    bool erase(Node*& node, const KeyType& key);
+      // Helper to erase a node that uses recursion
     void dump(const Node* node);
       // Helper to dumb that uses recursion
 };

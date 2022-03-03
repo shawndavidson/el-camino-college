@@ -14,6 +14,27 @@ using namespace std;
 Map::Map() : m_pRoot(nullptr), m_nSize(0) {
 }
 
+// Copy Constructor
+Map::Map(const Map& rhs) : m_pRoot(nullptr), m_nSize(rhs.m_nSize) {
+    if (&rhs == this)
+        return;
+    
+    // Perform a deep copy of the given Map
+    copy(this->m_pRoot, rhs.m_pRoot);
+}
+
+// Deep copy the binary search tree from a given Map recursively
+void Map::copy(Node*& node, const Node* otherNode) {
+    if (otherNode == nullptr)
+        return;
+    
+    // Perform a pre-order traversal to copy another Map
+    node = new Node(otherNode->key, otherNode->value);
+    
+    copy(node->left, otherNode->left);
+    copy(node->right, otherNode->right);
+}
+
 // Destructor
 Map::~Map() {
     deallocate(m_pRoot);
@@ -59,7 +80,7 @@ void Map::swap(Map& other) {
     this->m_nSize = other.m_nSize;
     other.m_nSize = size;
     
-    // If we add any additional state, handle it here...
+    // If we add any additional internal state, handle it here...
 }
 
 // Insert an item into the Map
@@ -72,9 +93,9 @@ bool Map::insertOrUpdate(const KeyType& key, const ValueType& value) {
 }
 
 bool Map::update(const KeyType& key, const ValueType& value) {
-    // This additional search will be on the order of log N. However,
+    // Leveraging contains() requires an additional search which is O(log N) + O(log N). However,
     // O(2 * log N) is still O(log N) so I think it's okay for this exercise.
-    // We're trading off maintainability for performance.
+    // We're trading off maintainability and ease of implementation for performance.
     return this->contains(key) ? insert(m_pRoot, key, value, true) : false;
 }
 
@@ -118,11 +139,24 @@ void Map::dump(const Node* node) {
     if (node == nullptr)
         return;
         
+    // Perform an In-order traversal of the binary search tree to dump in sorted order
     dump(node->left);
     
     cerr << node->key << "=>" << node->value << ", ";
     
     dump(node->right);
+}
+
+// Assignment operator
+Map& Map::operator=(const Map& rhs) {
+    if (&rhs == this)
+        return *this;
+    
+    // Use the copy swap idiom trick
+    Map temp(rhs);
+    temp.swap(*this);
+    
+    return *this;
 }
 
 bool Map::get(const KeyType& key, ValueType& value) const {
@@ -146,7 +180,95 @@ bool Map::get(const Node* node, const KeyType& key, ValueType& value) const {
     return true;
 }
 
+// Retrieve a key-value pair by index
+bool Map::get(int i, KeyType& key, ValueType& value) const {
+    int currentIndex = 0;
+    return get(m_pRoot, currentIndex, i, key, value);
+}
+
+// Helper to retrieve a key-value pair by index using recursion
+bool Map::get(Node* node, int& currentIndex, int targetIndex, KeyType& key, ValueType& value) const {
+    if (node == nullptr)
+        return false;
+    
+    // Use an in-order traversal to check the left and right subtrees to make the indexing ascending in sorted order
+    if (get(node->left, currentIndex, targetIndex, key, value))
+        return true;
+    
+    // Is the node at this index the one we're looking for?
+    if (currentIndex == targetIndex) {
+        key     = node->key;
+        value   = node->value;
+        
+        return true;
+    }
+    
+    // Only advance the index for non-null nodes
+    currentIndex++;
+    
+    return get(node->right, currentIndex, targetIndex, key, value);
+}
+
 bool Map::contains(const KeyType& key) const {
     ValueType value;
     return get(key, value);
+}
+
+bool Map::erase(const KeyType& key) {
+    if (erase(m_pRoot, key)) {
+        m_nSize--;
+        return true;
+    }
+    
+    return false;
+}
+
+bool Map::erase(Node*& node, const KeyType& key) {
+    if (node == nullptr) {
+        return false;
+    }
+    
+    if (key < node->key)
+        return erase(node->left, key);
+    
+    if (key > node->key)
+        return erase(node->right, key);
+    
+    // Invariant: This node matches the key we're looking for
+    
+    // Is this node a leaf (no children)?
+    if (node->left == nullptr && node->right == nullptr) {
+        // Detach this node from its parent
+        delete node;
+        node = nullptr;
+
+        return true;
+    }else if ((node->left == nullptr) != (node->right == nullptr)) {
+        // Handle a node with only one child
+        Node* temp = node;
+        
+        // Replace the node with it's only child
+        if (node->left != nullptr)
+            node = node->left;
+        else if (node->right != nullptr)
+            node = node->right;
+        
+        delete temp;
+
+        return true;
+    }
+    
+    // Invariant: The node must have two children
+    // Replace this node with the key-value from the largest node from the left subtree
+    Node* maxLeftDescendent         = node->left;
+    
+    while (maxLeftDescendent->right != nullptr) {
+        maxLeftDescendent       = maxLeftDescendent->right;
+    }
+    
+    node->key   = maxLeftDescendent->key;
+    node->value = maxLeftDescendent->value;
+    
+    // Recursively delete the node since we've taken it's value. It should only have 1 child at the most.
+    return erase(node->left, maxLeftDescendent->key);
 }

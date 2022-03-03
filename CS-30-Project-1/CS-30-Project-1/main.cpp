@@ -9,7 +9,9 @@
 #include <assert.h>
 #include "Map.h"
 
-void test1() {
+using namespace std;
+
+void myTest() {
     Map map;
     
     assert(map.size() == 0);
@@ -76,11 +78,80 @@ void test1() {
     assert(value4 == 123);
     
     map.dump();
+    
+    KeyType     key5;
+    ValueType   value5;
+    
+    assert(map.get(0, key5, value5) == true);
+    assert(key5 == "D");
+    assert(value5 == 1);
+    
+    assert(map.get(1, key5, value5) == true);
+    assert(key5 == "E");
+    assert(value5 == 3);
+    
+    assert(map.get(2, key5, value5) == true);
+    assert(key5 == "F");
+    assert(value5 == 4);
+    
+    assert(map.get(3, key5, value5) == true);
+    assert(key5 == "G");
+    assert(value5 == 123);
+    
+    assert(map.get(4, key5, value5) == true);
+    assert(key5 == "R");
+    assert(value5 == 11);
+    
+    assert(map.get(5, key5, value5) == true);
+    assert(key5 == "Z");
+    assert(value5 == 2);
+    
+    assert(map.get(6, key5, value5) == true);
+    assert(key5 == "ZZ");
+    assert(value5 == 100);
+}
+
+void testGet() {
+    Map gpas;
+    gpas.insert("Fred", 2.956);
+    gpas.insert("Ethel", 3.538);
+    double v;
+    string k1;
+    assert(gpas.get(1,k1,v)  &&  (k1 == "Fred"  ||  k1 == "Ethel"));
+    string k2;
+    assert(gpas.get(1,k2,v)  &&  k2 == k1);
+}
+
+void testEmptyString() {
+    Map gpas;
+    gpas.insert("Fred", 2.956);
+    assert(!gpas.contains(""));
+    gpas.insert("Ethel", 3.538);
+    gpas.insert("", 4.000);
+    gpas.insert("Lucy", 2.956);
+    assert(gpas.contains(""));
+    gpas.erase("Fred");
+    assert(gpas.size() == 3  &&  gpas.contains("Lucy")  &&  gpas.contains("Ethel")  &&
+                gpas.contains(""));
+}
+
+void testSwap() {
+    Map m1;
+    m1.insert("Fred", 2.956);
+    Map m2;
+    m2.insert("Ethel", 3.538);
+    m2.insert("Lucy", 2.956);
+    m1.swap(m2);
+    assert(m1.size() == 2  &&  m1.contains("Ethel")  &&  m1.contains("Lucy")  &&
+           m2.size() == 1  &&  m2.contains("Fred"));
 }
 
 int main(int argc, const char * argv[]) {
-    test1();
+    myTest();
     
+    testGet();
+    testEmptyString();
+    testSwap();
     
     return 0;
 }

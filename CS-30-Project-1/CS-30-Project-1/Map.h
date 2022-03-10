@@ -82,8 +82,10 @@ class Map
 private:
     // Node definition for a BST (Binary Search Tree)
     struct Node {
-        // Constructor
-        Node(const KeyType& key = KeyType(), const ValueType& value = ValueType()) : key(key), value(value), left(nullptr), right(nullptr) {};
+        // Default Constructor
+        Node(const KeyType& key = KeyType(), const ValueType& value = ValueType())
+         : key(key), value(value), left(nullptr), right(nullptr)
+        {};
 
         KeyType     key;
         ValueType   value;
@@ -94,7 +96,7 @@ private:
     
     int m_nSize;
     
-    // Private Member(s)
+    // Private Method(s)
 private:
     void copy(Node*& node, const Node* otherNode);
       // Helper to deep copy another Map recursively

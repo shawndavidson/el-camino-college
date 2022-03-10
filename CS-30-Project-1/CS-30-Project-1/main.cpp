@@ -208,7 +208,115 @@ void testString()
            ((s2 == "Fred"  &&  d == 123)  ||  (s2 == "Ethel"  &&  d == 456)));
 }
 
-int main(int argc, const char * argv[]) {
+void testEmptyMap() {
+    Map m;
+    
+    // For an empty map:
+    assert(m.size() == 0);      // test size
+    assert(m.empty());          // test empty
+    assert(!m.erase("Ricky"));  // nothing to erase
+    
+    KeyType key;
+    ValueType value;
+    assert(m.get(1, key, value) == false);
+    assert(m.contains("") == false);
+}
+
+void testAssignment() {
+    Map map;
+    
+    assert(map.size() == 0);
+    
+    map.insert("A", 0);
+    map.insert("B", 1);
+    map.insert("C", 2);
+    map.insert("D", 3);
+    map.insert("E", 4);
+    map.insert("F", 5);
+    
+    map.dump();
+    
+    Map map2(map);
+    
+    map2.dump();
+    
+    Map emptyMap;
+    
+    map2 = emptyMap;
+    
+    map2.dump();
+    
+    map2 = map;
+    
+    map2.dump();
+}
+
+void testCombine() {
+    Map m1;
+    Map m2;
+    
+    Map emptyResult;
+    assert(combine(m1, m2, emptyResult) == true);
+    assert(emptyResult.size() == 0);
+    
+    m1.insert("AA", 0);
+    m1.insert("BB", 1);
+    m1.insert("CC", 2);
+    
+    m2.insert("DD", 3);
+    m2.insert("EE", 4);
+    m2.insert("FF", 5);
+    
+    Map result;
+    assert(combine(m1, m2, result) == true);
+    assert(result.size() == 6);
+    
+    result.dump();
+    
+    Map m2WithDuplicates;
+    
+    m2WithDuplicates.insert("CC", 2);
+    m2WithDuplicates.insert("DD", 3);
+    m2WithDuplicates.insert("EE", 4);
+    m2WithDuplicates.insert("FF", 5);
+    
+    Map result2;
+    assert(combine(m1, m2WithDuplicates, result2) == false);
+    assert(result2.size() == 6);
+    
+    result.dump();
+}
+
+void testSubtract() {
+    Map m1;
+    Map m2;
+    
+    Map emptyResult;
+    subtract(m1, m2, emptyResult);
+    assert(emptyResult.size() == 0);
+    
+    m1.insert("AA", 0);
+    m1.insert("BB", 1);
+    m1.insert("CC", 2);
+    m1.insert("DD", 3);
+    m1.insert("EE", 4);
+    m1.insert("FF", 5);
+    
+    m2.insert("BB", 1);
+    m2.insert("DD", 3);
+    m2.insert("FF", 5);
+
+    Map everyOtherResult;
+
+    subtract(m1, m2,everyOtherResult);
+    
+    assert(everyOtherResult.size() == 3);
+    assert(everyOtherResult.contains("AA"));
+    assert(everyOtherResult.contains("CC"));
+    assert(everyOtherResult.contains("EE"));
+}
+
+int main() {
     myTest();
     
     testGet();
@@ -216,6 +324,10 @@ int main(int argc, const char * argv[]) {
     testEmptyString();
     testSwap();
     testString();
+    testEmptyMap();
+    testAssignment();
+    testCombine();
+    testSubtract();
     
     cout << endl;
     cout << "Passed all tests" << endl;

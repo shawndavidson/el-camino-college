@@ -7,89 +7,39 @@
 
 #include <vector>
 #include <iostream>
+#include <string>
+#include <stdexcept>
 
 using namespace std;
 
-// The purpose of this class is to provide a common base class to
-// implement an exception
-class MyExceptionBase : public exception {
+class InvalidSize : public runtime_error {
 public:
-    // Constructor
-    MyExceptionBase(const char* msg) : m_msg(msg) {}
-    
-    // Copy Constructor
-    MyExceptionBase(const MyExceptionBase& rhs) : m_msg(rhs.m_msg) {}
-    
-    // Destructor
-    virtual ~MyExceptionBase() {}
-    
-    // Retrieve the error message
-    virtual const char* what() const throw() {
-        return m_msg.c_str();
-    }
-    
-    // Assignment Operator
-    MyExceptionBase& operator=(const MyExceptionBase& rhs) {
-        // If rhs is an alias for this, there's nothing to do
-        if (&rhs == this)
-            return *this;
-        
-        m_msg   = rhs.m_msg;
-        
-        return *this;
-    }
-    
-private:
-    std::string m_msg;
-};
-
-class InvalidSize : public MyExceptionBase {
-public:
-    InvalidSize(const char* msg) : MyExceptionBase(msg) {};
+    InvalidSize(const char* msg) : runtime_error(msg) {};
 };
 
 // The purpose of this class is to implement an exception caused
 // by attempting to pop an item from an empty stack
-class StackEmpty : public MyExceptionBase {
+class StackEmpty : public runtime_error {
 public:
-    StackEmpty(const char* msg) : MyExceptionBase(msg) {};
+    StackEmpty(const char* msg) : runtime_error(msg) {};
 };
 
 // The purpose of this class is to implement an exception caused
 // by attempting to push an item to a full stack
-class StackFull : public MyExceptionBase {
+class StackFull : public runtime_error {
 public:
     // Constructor
     StackFull(const char* msg, int value)
-    : MyExceptionBase(msg), m_value(value) {}
-    
-    // Copy Constructor
-    StackFull(const StackFull& rhs)
-    : MyExceptionBase(rhs), m_value(rhs.m_value) {};
-    
-    // Destructor
-    virtual ~StackFull() {}
+    : runtime_error((string(msg) + ", Value = " + std::to_string(value)).c_str()),
+      m_value(value) {}
     
     // Retrieve the value given when the error occured
-    virtual int GetValue() const {
+    int GetValue() const {
         return m_value;
     }
     
-    // Assignment Operator
-    StackFull& operator=(const StackFull& rhs) {
-        // If rhs is an alias for this, there's nothing to do
-        if (&rhs == this)
-            return *this;
-        
-        MyExceptionBase::operator=(rhs);
-        
-        m_value = rhs.m_value;
-        
-        return *this;
-    }
-    
 private:
-    int         m_value;
+    const int m_value;
 };
 
 class IntStack
@@ -150,7 +100,7 @@ int main()
         c_test.pop();
         c_test.pop();
     }
-    catch(MyExceptionBase& e) {
+    catch(runtime_error& e) {
         cerr << e.what() << endl;
     }
 
@@ -162,7 +112,7 @@ int main()
             push_test.push(i);
         }
     }
-    catch(MyExceptionBase& e) {
+    catch(runtime_error& e) {
         cerr << e.what() << endl;
     }
 
@@ -176,7 +126,7 @@ int main()
         pop_test.pop();
         pop_test.pop();
     }
-    catch(MyExceptionBase& e) {
+    catch(runtime_error& e) {
         cerr << e.what() << endl;
     }
     

@@ -30,7 +30,7 @@ class StackFull : public runtime_error {
 public:
     // Constructor
     StackFull(const char* msg, int value)
-    : runtime_error((string(msg) + ", Value = " + std::to_string(value)).c_str()),
+    : runtime_error(msg),
       m_value(value) {}
     
     // Retrieve the value given when the error occured
@@ -100,7 +100,7 @@ int main()
         c_test.pop();
         c_test.pop();
     }
-    catch(runtime_error& e) {
+    catch(exception& e) {
         cerr << e.what() << endl;
     }
 
@@ -112,10 +112,13 @@ int main()
             push_test.push(i);
         }
     }
-    catch(runtime_error& e) {
+    catch(StackFull& e) {
+        cerr << e.what() << ", Value " << e.GetValue() << endl;
+    }
+    catch(exception& e) {
         cerr << e.what() << endl;
     }
-
+    
     // Testing pop
     try {
         IntStack pop_test(2);
@@ -126,7 +129,7 @@ int main()
         pop_test.pop();
         pop_test.pop();
     }
-    catch(runtime_error& e) {
+    catch(exception& e) {
         cerr << e.what() << endl;
     }
     

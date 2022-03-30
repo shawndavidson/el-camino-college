@@ -7,8 +7,9 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <assert.h>
 
-#include <vector>
+#include <vector> // for testing
 
 using namespace std;
 
@@ -452,7 +453,7 @@ void testObject() {
     }
 }
 
-int main(int argc, const char * argv[]) {
+int main() {
     try {
         demo();
     }

@@ -23,7 +23,6 @@ ostream& operator<<(ostream& os, const FootBallPlayer& player)
 
 // Exception safety: Strong Guarantee
 void LinkedList::insertToFront(ItemType val) {
-//        Node *p = new Node;
     auto p = make_shared<Node>();
     p->value = val;
     p->next = head;
@@ -34,14 +33,12 @@ void LinkedList::insertToFront(ItemType val) {
 // copy constructor
 // Exception Safety: Strong Guarantee
 LinkedList::LinkedList(const LinkedList& rhs) {
-    // code goes here
-    
     // If rhs is just an alias for this, do nothing
     if (this == &rhs)
         return;
     
     // If the other list is empty, just nullify our head
-    if (rhs.head.get() == nullptr) {
+    if (rhs.head == nullptr) {
         head.reset();
         return;
     }
@@ -55,7 +52,7 @@ LinkedList::LinkedList(const LinkedList& rhs) {
 
     shared_ptr<Node> other         = rhs.head->next;
     
-    while (other.get() != nullptr) {
+    while (other != nullptr) {
         // Create a copy of the next node from the rhs
         copy->next  = make_shared<Node>();
         copy->next->value = other->value;
@@ -68,6 +65,53 @@ LinkedList::LinkedList(const LinkedList& rhs) {
     // Lastly, switch to the new head to maintain a strong guarantee with
     // respect to exception safety
     head = newHead;
+}
+
+void LinkedList::printList(ostream& os = cout) const {
+    for (auto p = head; p != nullptr; p = p->next)
+        os << p->value;
+    os << endl;
+}
+
+void LinkedList::deleteItem(ItemType v) {
+    
+    // This function points a pointer one before the node
+    // that should be deleted. It first checks if the list is
+    // empty or the item to be deleted if the first node.
+    
+    if (head == nullptr)
+        return;
+    if (head->value == v)
+    {
+        head = head->next;
+        return;
+    }
+
+    shared_ptr<Node> p = head;
+    while (p != nullptr) {
+        if (p->next != nullptr && v == p->next->value)
+            break;
+        p = p->next;
+    }
+    if (p == nullptr) // not found
+        return;
+
+    p->next = p->next->next;
+}
+
+bool LinkedList::findItem(ItemType& item, std::function<bool(const ItemType&)> predicate){
+    // return true or false if v is in List
+    auto p = head;
+    
+    while (p != nullptr) {
+        if (predicate(p->value)) {
+            item = p->value;
+            return true;
+        }
+        p = p->next;
+    }
+
+    return false;
 }
 
 // assignment operator
@@ -84,96 +128,6 @@ const LinkedList& LinkedList::operator=(const LinkedList& rhs) {
     return *this;
 }
 
-void LinkedList::swap(LinkedList& other) noexcept {
-    shared_ptr<Node> _head = head;
-    head = other.head;
-    other.head = _head;
-}
-
-void LinkedList::printList(ostream& os = cout) const {
-    for (auto p = head; p != nullptr; p = p->next)
-        os << p->value << " ";
-    os << endl;
-}
-
-LinkedList::~LinkedList() {
-    
-    // The smart pointers will take care of deallocation
-//        Node *p;
-//
-//        while (head != nullptr) {
-//            p = head;
-//            head = head->next;
-//            delete p;
-//        }
-}
-
-// Not used
-//    Node * findLast() {
-//
-//        // return nullptr if list is empty
-//        return nullptr;
-//    }
-
-// Not used
-//    Node * findSecondLast() {
-//
-//        // return nullptr if there is no second last
-//        return nullptr;
-//
-//    }
-
-void LinkedList::deleteItem(ItemType v) {
-    
-    // This function points a pointer one before the node
-    // that should be deleted. It first checks if the list is
-    // empty or the item to be deleted if the first node.
-    
-    if (head == nullptr)
-        return;
-    if (head->value == v)
-    {
-//            Node *p = head;
-        head = head->next;
-//            delete p;
-        return;
-    }
-//        Node *p = head;
-    shared_ptr<Node> p = head;
-    while (p.get() != nullptr) {
-        if (p->next != nullptr && v == p->next->value)
-            break;
-        p = p->next;
-    }
-    if (p == nullptr) // not found
-        return;
-    //shared_ptr<Node> q = p->next;
-    //p->next = q->next;
-//        delete q;
-    p->next = p->next->next;
-}
-
-//bool LinkedList::findItem(ItemType& item, bool (*predicate)(const ItemType&))
-bool LinkedList::findItem(ItemType& item, std::function<bool(const ItemType&)> predicate){
-    // return true or false if v is in List
-    auto p = head;
-    
-    while (p != nullptr) {
-        if (predicate(p->value)) {
-            item = p->value;
-            return true;
-        }
-        p = p->next;
-    }
-
-    return false;
-}
-
-//void LinkedList::insertToRear(ItemType val) {
-//
-//    // inserts a node with value val at the end of the list
-//}
-
 // equality operator
 bool LinkedList::operator==(const LinkedList& rhs) const noexcept {
     if (this == &rhs)
@@ -182,13 +136,19 @@ bool LinkedList::operator==(const LinkedList& rhs) const noexcept {
     shared_ptr<Node> p      = head;
     shared_ptr<Node> other  = rhs.head;
     
-    while (p.get() != nullptr) {
-        if (other.get() == nullptr || p->value != other->value)
+    while (p != nullptr) {
+        if (other == nullptr || p->value != other->value)
             return false;
         
         p       = p->next;
         other   = other->next;
     }
     
-    return p.get() == nullptr && other.get() == nullptr;
+    return p == nullptr && other == nullptr;
+}
+
+void LinkedList::swap(LinkedList& other) noexcept {
+    shared_ptr<Node> _head = head;
+    head = other.head;
+    other.head = _head;
 }

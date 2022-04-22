@@ -9,28 +9,6 @@
 #include "FootBallRoster.hpp"
 #include "LinkedList.hpp"
 
-//int main() {
-//    LinkedList l;
-//
-//    l.insertToFront(2);
-//    l.insertToFront(3);
-//    l.insertToFront(5);
-//    l.printList();
-//
-//    LinkedList ll = l;  // calls the copy constructor
-//
-//    ll.insertToFront(8);
-//
-//    ll.printList();
-//    l.printList();
-//
-//    ll = l;             // calls the assignment operator
-//
-//    ll.printList();
-//
-//    return 0;
-//}
-
 int main() {
 
     FootBallPlayer fb1{ "Matthew Stafford", 9 };
@@ -46,9 +24,6 @@ int main() {
     roster.printPlayers();
     roster.setFavorite("Aaron Donald");
 
-    // NEW
-    std::optional<FootBallPlayer> fav = roster.getFavorite();
-    
     favoritePlayer(roster);
 
     roster.deletePlayer("Aaron Donald");

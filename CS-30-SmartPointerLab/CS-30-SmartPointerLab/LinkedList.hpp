@@ -17,9 +17,8 @@ using namespace std;
 typedef FootBallPlayer ItemType;
 
 struct Node {
-    ItemType value;
-    //Node *next;
-    shared_ptr<Node> next;
+    ItemType            value;
+    shared_ptr<Node>    next;
 };
 
 // Stream operator for outputting a LinkedList 
@@ -31,50 +30,33 @@ ostream& operator<<(ostream& os, const FootBallPlayer& player);
 class LinkedList {
 
 private:
-//    Node *head=nullptr;
     shared_ptr<Node> head;
     
 public:
     // default constructor
     LinkedList() noexcept = default;
     
-    void insertToFront(ItemType val);
-
     // copy constructor
     LinkedList(const LinkedList& rhs);
     
+    // Destructor
+    ~LinkedList() = default;
+
+    void insertToFront(ItemType val);
+    
+    void printList(ostream& os) const;
+        
+    void deleteItem(ItemType v);
+    
+    bool findItem(ItemType& item, std::function<bool(const ItemType&)> predicate);
+            
     // assignment operator
     const LinkedList& operator=(const LinkedList& rhs);
     
-    void printList(ostream& os) const;
-    
-    ~LinkedList();
-    
-    // Not used
-//    Node * findLast() {
-//
-//        // return nullptr if list is empty
-//        return nullptr;
-//    }
-    
-    // Not used
-//    Node * findSecondLast() {
-//
-//        // return nullptr if there is no second last
-//        return nullptr;
-//
-//    }
-    
-    void deleteItem(ItemType v);
-    
-    //bool findItem(ItemType& item, bool (*predicate)(const ItemType&));
-    bool findItem(ItemType& item, std::function<bool(const ItemType&)> predicate);
-    
-//    void insertToRear(ItemType val);
+    // Equality Operator
+    bool operator==(const LinkedList& rhs) const noexcept;
     
     void swap(LinkedList& other) noexcept;
-    
-    bool operator==(const LinkedList& rhs) const noexcept;
 };
 
 #endif /* LinkedList_hpp */

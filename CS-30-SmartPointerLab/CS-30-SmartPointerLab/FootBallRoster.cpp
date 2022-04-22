@@ -8,7 +8,41 @@
 #include "FootBallRoster.hpp"
 #include "LinkedList.hpp"
 
+// Default Constructor
+FootBallPlayer::FootBallPlayer()
+: name(), num(0)
+{
+}
 
+// Constructor
+FootBallPlayer::FootBallPlayer(string name, int num)
+: name(name), num(num)
+{
+}
+
+// assignment operator
+FootBallPlayer& FootBallPlayer::operator=(const FootBallPlayer& rhs) {
+    if (this == &rhs)
+        return *this;
+    
+    name    = rhs.name;
+    num     = rhs.num;
+    
+    return *this;
+}
+
+// equality operator
+bool FootBallPlayer::operator==(const FootBallPlayer& rhs) const {
+    if (this == &rhs)
+        return true;
+    
+    return name == rhs.name && num == rhs.num;
+}
+
+// in-equality operator
+bool FootBallPlayer::operator!=(const FootBallPlayer& rhs) const {
+    return !operator==(rhs);
+}
 
 // Default Constructor
 FootBallRoster::FootBallRoster()

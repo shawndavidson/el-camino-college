@@ -20,8 +20,10 @@ struct FootBallPlayer {
     string name;
     int num;
     
-    // Constructor
+    // Default Constructor
     FootBallPlayer() : name(), num(0) {}
+    // Constructor
+    FootBallPlayer(string name, int num) : name(name), num(num) {} 
     
     // Destructor
     ~FootBallPlayer() = default;
@@ -79,23 +81,11 @@ public:
     
 private:
     shared_ptr<LinkedList> m_pList;
+    shared_ptr<FootBallPlayer> m_pFavoritePlayer;
 };
 
  // prints out the name of the favorite player or a message
  // stating there is no favorite player.
 void favoritePlayer(const FootBallRoster& roster);
-
-class CheckPlayerByName {
-public:
-    CheckPlayerByName(string name) : m_name(name) {
-    }
-    
-    bool operator()(const FootBallPlayer& player) const {
-        return player.name == m_name;
-    }
-    
-private:
-    string m_name;
-};
 
 #endif /* FootBallRoster_hpp */

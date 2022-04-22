@@ -9,6 +9,7 @@
 #include "LinkedList.hpp"
 
 
+
 // Default Constructor
 FootBallRoster::FootBallRoster()
 : m_pList(make_shared<LinkedList>()) {
@@ -19,13 +20,8 @@ void FootBallRoster::addPlayer(FootBallPlayer player) {
     m_pList->insertToFront(player);
 }
 
-bool CheckPlayerByName2(const FootBallPlayer& player) {
-    return player.name == "Shawn";
-}
-
 // deletes the first FootBallPlayer that matches name
 bool FootBallRoster::deletePlayer(string name) {
-    // TODO
     FootBallPlayer player;
     
     if (m_pList->findItem(player, [name](const FootBallPlayer& player) {
@@ -33,19 +29,36 @@ bool FootBallRoster::deletePlayer(string name) {
     })) {
         m_pList->deleteItem(player);
     }
+    
+    // Reset the favorite if it was the deleted player
+    if (m_pFavoritePlayer && m_pFavoritePlayer->name == player.name)
+        m_pFavoritePlayer.reset();
+    
     return false;
 }
 
 // Uses a weak_ptr to return true if the
 bool FootBallRoster::setFavorite(string name) {
     // TODO
+    FootBallPlayer player;
+    
+    if (m_pList->findItem(player, [name](const FootBallPlayer& player) {
+        return player.name == name;
+    })) {
+        m_pFavoritePlayer = make_shared<FootBallPlayer>();
+        *m_pFavoritePlayer = player;
+    }
+    
     return false;
 }
 
 // Returns an optional parameter if there is a favorite player
-//std::optional<FootBallPlayer> FootBallRoster::getFavorite() const {
-//
-//}
+std::optional<FootBallPlayer> FootBallRoster::getFavorite() const {
+    if (m_pFavoritePlayer)
+        return *m_pFavoritePlayer;
+    
+    return {};
+}
 
 // Prints the list of FootBallPlayers on the roster
 void FootBallRoster::printPlayers() const {
@@ -61,5 +74,13 @@ bool FootBallRoster::operator==(const FootBallRoster& rhs) const {
 }
 
 void favoritePlayer(const FootBallRoster& roster) {
-    // TODO
+    std::optional<FootBallPlayer> favoritePlayer =
+        roster.getFavorite();
+    
+    if (favoritePlayer.has_value())
+        cout << "Your favorite player is: " << favoritePlayer.value();
+    else
+        cout << "You don't have a favorite player";
+    
+    cout << endl;
 }

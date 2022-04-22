@@ -46,6 +46,9 @@ int main() {
     roster.printPlayers();
     roster.setFavorite("Aaron Donald");
 
+    // NEW
+    std::optional<FootBallPlayer> fav = roster.getFavorite();
+    
     favoritePlayer(roster);
 
     roster.deletePlayer("Aaron Donald");

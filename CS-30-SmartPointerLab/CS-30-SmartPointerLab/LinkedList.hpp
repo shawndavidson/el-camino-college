@@ -67,7 +67,8 @@ public:
     
     void deleteItem(ItemType v);
     
-    bool findItem(ItemType v);
+    //bool findItem(ItemType& item, bool (*predicate)(const ItemType&));
+    bool findItem(ItemType& item, std::function<bool(const ItemType&)> predicate);
     
 //    void insertToRear(ItemType val);
     

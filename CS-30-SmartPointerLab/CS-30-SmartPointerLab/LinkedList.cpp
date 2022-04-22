@@ -7,12 +7,14 @@
 
 #include "LinkedList.hpp"
 
+// Stream operator to output a LinkedList
 ostream& operator<<(ostream& os, const LinkedList& list)
 {
     list.printList(os);
     return os;
 }
 
+// Stream operator to output a FootBallPlayer
 ostream& operator<<(ostream& os, const FootBallPlayer& player)
 {
     os << player.name << " #" << player.num << endl;
@@ -137,13 +139,13 @@ void LinkedList::deleteItem(ItemType v) {
         return;
     }
 //        Node *p = head;
-    shared_ptr<Node> p;
+    shared_ptr<Node> p = head;
     while (p.get() != nullptr) {
-        if (p->next.get() != nullptr && v == p->next->value)
+        if (p->next != nullptr && v == p->next->value)
             break;
         p = p->next;
     }
-    if (p.get() == nullptr) // not found
+    if (p == nullptr) // not found
         return;
     //shared_ptr<Node> q = p->next;
     //p->next = q->next;
@@ -151,10 +153,20 @@ void LinkedList::deleteItem(ItemType v) {
     p->next = p->next->next;
 }
 
-bool LinkedList::findItem(ItemType v) {
-
+//bool LinkedList::findItem(ItemType& item, bool (*predicate)(const ItemType&))
+bool LinkedList::findItem(ItemType& item, std::function<bool(const ItemType&)> predicate){
     // return true or false if v is in List
-    return true;
+    auto p = head;
+    
+    while (p != nullptr) {
+        if (predicate(p->value)) {
+            item = p->value;
+            return true;
+        }
+        p = p->next;
+    }
+
+    return false;
 }
 
 //void LinkedList::insertToRear(ItemType val) {

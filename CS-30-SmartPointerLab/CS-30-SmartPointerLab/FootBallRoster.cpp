@@ -19,9 +19,20 @@ void FootBallRoster::addPlayer(FootBallPlayer player) {
     m_pList->insertToFront(player);
 }
 
+bool CheckPlayerByName2(const FootBallPlayer& player) {
+    return player.name == "Shawn";
+}
+
 // deletes the first FootBallPlayer that matches name
 bool FootBallRoster::deletePlayer(string name) {
     // TODO
+    FootBallPlayer player;
+    
+    if (m_pList->findItem(player, [name](const FootBallPlayer& player) {
+        return player.name == name;
+    })) {
+        m_pList->deleteItem(player);
+    }
     return false;
 }
 

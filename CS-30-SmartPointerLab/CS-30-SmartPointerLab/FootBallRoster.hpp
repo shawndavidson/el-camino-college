@@ -51,7 +51,8 @@ struct FootBallPlayer {
     }
 };
 
-// Forward declaration
+// Forward declaration -
+// avoids circular dependency since LinkedList needs to include FootBallRoster.hpp for it's FootBallPlayer definiton
 class LinkedList;
 
 class FootBallRoster {
@@ -83,5 +84,18 @@ private:
  // prints out the name of the favorite player or a message
  // stating there is no favorite player.
 void favoritePlayer(const FootBallRoster& roster);
+
+class CheckPlayerByName {
+public:
+    CheckPlayerByName(string name) : m_name(name) {
+    }
+    
+    bool operator()(const FootBallPlayer& player) const {
+        return player.name == m_name;
+    }
+    
+private:
+    string m_name;
+};
 
 #endif /* FootBallRoster_hpp */

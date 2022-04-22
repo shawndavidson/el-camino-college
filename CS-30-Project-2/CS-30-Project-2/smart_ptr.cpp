@@ -9,8 +9,6 @@
 #include <stdexcept>
 #include <assert.h>
 
-#include <vector> // for testing
-
 using namespace std;
 
 class null_ptr_exception : runtime_error {
@@ -82,7 +80,7 @@ private:
 template <typename T>
 smart_ptr<T>::smart_ptr() noexcept
  : ptr_(nullptr), ref_(nullptr) {
-}
+ }
 
 // Constructor for a raw pointer that accepts an L-Value
 // Exception Safety - Strong
@@ -440,17 +438,17 @@ void testObject() {
     assert(sp1.ref_count() == 0);
     assert(sp2.ref_count() == 0);
 
-    
-    string* p2 = new string{"Hola!"};
-    smart_ptr<string> s5(p2);
-    vector< smart_ptr<string> > v(10, s5);
-    
-    assert(s5.ref_count() == 11);
-    for(auto it = begin(v); it != end(v); it++) {
-        smart_ptr<string>& sp_ = *it;
-        assert(*sp_ == "Hola!");
-        assert( sp_.ref_count() == 11);
-    }
+//  Removed test because it requires me to #include <vector>
+//    string* p2 = new string{"Hola!"};
+//    smart_ptr<string> s5(p2);
+//    vector< smart_ptr<string> > v(10, s5);
+//
+//    assert(s5.ref_count() == 11);
+//    for(auto it = begin(v); it != end(v); it++) {
+//        smart_ptr<string>& sp_ = *it;
+//        assert(*sp_ == "Hola!");
+//        assert( sp_.ref_count() == 11);
+//    }
 }
 
 int main() {

@@ -10,6 +10,8 @@
 
 #include <iostream>
 #include <memory>
+#include <functional> // needed for std::function
+
 #include "FootBallRoster.hpp"
 
 using namespace std;
@@ -48,6 +50,9 @@ public:
         
     void deleteItem(ItemType v);
     
+    // Find the first item in the list that satisfies a given predicate function (returns true).
+    // If an item is found, the return value of this function is true and the item is passed back by reference as an argument. Otherwise, it returns
+    // false and argument item is not changed.
     bool findItem(ItemType& item, std::function<bool(const ItemType&)> predicate);
             
     // assignment operator
@@ -56,6 +61,7 @@ public:
     // Equality Operator
     bool operator==(const LinkedList& rhs) const noexcept;
     
+    // Swap our internal state with another instance (supports the copy-swap idiom).
     void swap(LinkedList& other) noexcept;
 };
 

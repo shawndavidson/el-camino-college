@@ -73,7 +73,6 @@ bool FootBallRoster::deletePlayer(string name) {
 
 // Uses a weak_ptr to return true if the
 bool FootBallRoster::setFavorite(string name) {
-    // TODO
     FootBallPlayer player;
     
     if (m_pList->findItem(player, [name](const FootBallPlayer& player) {

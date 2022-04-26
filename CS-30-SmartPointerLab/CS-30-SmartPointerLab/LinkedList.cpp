@@ -23,11 +23,14 @@ ostream& operator<<(ostream& os, const FootBallPlayer& player)
 
 // Exception safety: Strong Guarantee
 void LinkedList::insertToFront(ItemType val) {
+    // Create a new node to hold val that points to the current head
     auto p = make_shared<Node>();
-    p->value = val;
-    p->next = head;
     
-    head = p;
+    p->value    = val;
+    p->next     = head;
+    
+    // Set the head to the new node
+    head        = p;
 }
 
 // copy constructor
@@ -48,14 +51,14 @@ LinkedList::LinkedList(const LinkedList& rhs) {
 
     newHead->value = rhs.head->value;
     
+    // Iterate through the other list (rhs), copying each node
     shared_ptr<Node> copy   = newHead;
-
-    shared_ptr<Node> other         = rhs.head->next;
+    shared_ptr<Node> other  = rhs.head->next;
     
     while (other != nullptr) {
         // Create a copy of the next node from the rhs
-        copy->next  = make_shared<Node>();
-        copy->next->value = other->value;
+        copy->next          = make_shared<Node>();
+        copy->next->value   = other->value;
         
         // Advanced to the next node on the rhs
         other   = other->next;
@@ -103,6 +106,7 @@ bool LinkedList::findItem(ItemType& item, std::function<bool(const ItemType&)> p
     // return true or false if v is in List
     auto p = head;
     
+    // Iterate through the list until the predicate is true.
     while (p != nullptr) {
         if (predicate(p->value)) {
             item = p->value;
@@ -111,6 +115,7 @@ bool LinkedList::findItem(ItemType& item, std::function<bool(const ItemType&)> p
         p = p->next;
     }
 
+    // Notify caller that the item wasn't found.
     return false;
 }
 
@@ -144,11 +149,13 @@ bool LinkedList::operator==(const LinkedList& rhs) const noexcept {
         other   = other->next;
     }
     
+    // Ensure that we've reached the end of both list to handle the case where the lists are different lengths but one is a subset of the other.
     return p == nullptr && other == nullptr;
 }
 
 void LinkedList::swap(LinkedList& other) noexcept {
+    // Swap our head with the other head
     shared_ptr<Node> _head = head;
-    head = other.head;
-    other.head = _head;
+    head        = other.head;
+    other.head  = _head;
 }

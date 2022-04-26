@@ -28,4 +28,23 @@ int main() {
 
     roster.deletePlayer("Aaron Donald");
     favoritePlayer(roster);
+    
+    // MORE TESTS...
+    cout << "Tried to remove a player not in the list" << endl;
+    roster.deletePlayer("<Not in list>");
+    
+    roster.printPlayers();
+    
+    cout << "Removed the 2 players that are left" << endl;
+    roster.deletePlayer("Jalen Ramsey");
+    roster.deletePlayer("Matthew Stafford");
+    
+    roster.printPlayers();
+    
+    favoritePlayer(roster);
+    
+    roster.addPlayer({ "Shawn Davidson", 44});
+    
+    roster.printPlayers();
+
 }

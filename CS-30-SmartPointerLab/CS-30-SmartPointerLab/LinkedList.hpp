@@ -61,6 +61,7 @@ public:
     // Equality Operator
     bool operator==(const LinkedList& rhs) const noexcept;
     
+private:
     // Swap our internal state with another instance (supports the copy-swap idiom).
     void swap(LinkedList& other) noexcept;
 };

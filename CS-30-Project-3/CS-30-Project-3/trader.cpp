@@ -11,6 +11,7 @@
 #include <fstream>
 #include <sstream>
 #include <map>
+#include <set>
 #include <unordered_map>
 
 using namespace std;
@@ -29,9 +30,16 @@ typedef map<int, int> MapStockPrices;
 
 // Associates a day to trades, where each trade associates a trader to # of shares bought or sold.
 // The # of shares is indicated by a positive value for a buy and negative for a sell.
+// Using an unordered_map for fast lookups O(1) by trading day
+// Using a multimap because a trader may make multiple trades on a single day
 typedef unordered_map<int, multimap<string, int>> MapTrades;
 
-// Parse the prices and trades from the stock trading data
+// Associates a day to a set of traders who made suspicious trades (exceeded thresholds)
+// Using a map to keep the keys (day) sorted
+// Using a set to ensure uniqueness (traders), i.e. a trader has at most one alert on a given day
+typedef map<int, set<string>> MapAlerts;
+
+// Parse the stock prices and trades from the raw stock trading data
 void parse(const vector<string>& inputVec, MapStockPrices& prices, MapTrades& trades) {
     vector<string> tokens;
     string token;
@@ -80,42 +88,83 @@ void parse(const vector<string>& inputVec, MapStockPrices& prices, MapTrades& tr
 
 }
 
-vector<string> findPotentialBadTraders(const vector<string>& inputVec) {
-    vector<string> traderAlerts;
+// Format alert data into strings suitable for displaying to the user
+void formatAlerts(const MapAlerts& alerts, vector<string>& results) {
+    // Convert alerts to strings
+    for (auto alertPair : alerts) {
+        const int& day = alertPair.first;
+        const set<string>& traders = alertPair.second;
+        
+        for (string trader : traders) {
+            stringstream ss;
+            ss << day << delimeter << trader;
+            
+            results.push_back(ss.str());
+        }
+    }
+}
 
-    MapStockPrices  prices;
-    MapTrades       trades;
+// Analyze stock price changes and trades for excessive profits/avoided losses. Return alerts to the caller.
+void analyzeTrades(const MapStockPrices &prices, const MapTrades &trades, MapAlerts &alerts) {
+    // Is there anything to check?
+    if (prices.size() == 0 || trades.size() == 0)
+        return;
     
-    parse(inputVec, prices, trades);
+    int last_price = prices.at(0);
     
-    int last_price = prices[0];
+    alerts.clear();
     
+    // Iterate through the changes in stock price
     for (auto pricePair : prices) {
         const int& day    = pricePair.first;
         const int& price  = pricePair.second;
         
+        // Calculate the difference from the last price
         int priceChange = price - last_price;
         
+        // Look back over the past N days (days_threshold) for a trade whose profit or
+        // avoided loss exceeds our threshold
         for (int daysToLookBack = 0; daysToLookBack < days_threshold; daysToLookBack++) {
             int actualDay = day - daysToLookBack;
             
-            for (auto tradePair : trades[actualDay]) {
-                const string& trader    = tradePair.first;
-                const int& amount       = tradePair.second;
-                
-                if (amount * priceChange > profit_threshold) {
-                    stringstream ss;
-                    ss << actualDay << delimeter << trader;
+            try {
+                // Iterate through the trades for this day
+                for (auto tradePair : trades.at(actualDay)) {
+                    const string& trader    = tradePair.first;
+                    const int& amount       = tradePair.second;
                     
-                    traderAlerts.push_back(ss.str());
+                    // If a profit or an avoided loss, i.e. a buy before a price increase or a sell before a price decrease
+                    // that exceeds our threshold
+                    if (amount * priceChange > profit_threshold) {
+                        alerts[actualDay].insert(trader);
+                    }
                 }
+            }
+            catch(out_of_range ex) {
+                // trades.at(actualDay) will throw if there are no trades on this day.
+                // It's okay, just keep going...
             }
         }
         
         last_price = pricePair.second;
     }
+}
+
+vector<string> findPotentialBadTraders(const vector<string>& inputVec) {
+    MapStockPrices  prices;
+    MapTrades       trades;
+
+    parse(inputVec, prices, trades);
     
-    return traderAlerts;
+    MapAlerts       alerts;
+
+    analyzeTrades(prices, trades, alerts);
+    
+    vector<string> results;
+
+    formatAlerts(alerts, results);
+    
+    return results;
 }
 
 int main() {

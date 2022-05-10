@@ -169,7 +169,7 @@ vector<string> findPotentialBadTraders(const vector<string>& inputVec) {
 
 int main() {
     
-    ifstream in("/Users/sdavidson/XCodeProjects/CS-30-Project-3/CS-30-Project-3/input.txt");
+    ifstream in("input.txt");
     string str;
     
     if (!in) {

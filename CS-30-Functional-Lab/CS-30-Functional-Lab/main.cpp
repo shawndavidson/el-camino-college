@@ -61,7 +61,7 @@ vector<string> words(string text) {
     // Replace non-alphanumeric characters with a single space
     replace_if(
        begin(text), end(text),
-       [](char ch) -> bool { return !isalpha(ch) && !isnumber(ch); },
+       [](char ch) { return !isalnum(ch); },
        ' '
     );
     
@@ -89,6 +89,6 @@ void print_common_words(string text) {
 int main() {
     print_common_words("the.the.the,a,\nword\nword\n,a,b,a");
     
-    print_common_words("The The The CS30 class is awesome!a.a.");
+    //print_common_words("The The The CS30 class is awesome!a.a.");
 
 }

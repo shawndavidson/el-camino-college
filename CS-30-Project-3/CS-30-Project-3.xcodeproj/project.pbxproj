@@ -23,6 +23,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		879DD924282A0A6F005A38E2 /* empty.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = empty.txt; sourceTree = "<group>"; };
 		87B169C2282951D50037233C /* CS-30-Project-3 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "CS-30-Project-3"; sourceTree = BUILT_PRODUCTS_DIR; };
 		87B169C5282951D50037233C /* trader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = trader.cpp; sourceTree = "<group>"; };
 		87B169CC282951E90037233C /* input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = input.txt; sourceTree = "<group>"; };
@@ -60,6 +61,7 @@
 			children = (
 				87B169CC282951E90037233C /* input.txt */,
 				87B169C5282951D50037233C /* trader.cpp */,
+				879DD924282A0A6F005A38E2 /* empty.txt */,
 			);
 			path = "CS-30-Project-3";
 			sourceTree = "<group>";

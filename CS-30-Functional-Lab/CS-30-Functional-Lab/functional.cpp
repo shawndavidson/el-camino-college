@@ -16,22 +16,22 @@
 
 using namespace std;
 
+// Print each pair displaying the frequency then the word
 void print_pairs(vector <pair<int, string>> v) {
-    
-    // Print each pair displaying the frequency then the word
     for (auto pair : v) {
         cout << pair.first << " " << pair.second << endl;
     }
 }
 
+// Sort by frequency in descending order
 vector <pair<int, string>> sort_by_frequency(vector <pair<int, string>> v) {
-    // Sort by frequency in descending order
     sort(begin(v), end(v),
          [](auto i, auto j){ return i.first > j.first; });
     
     return v;
 }
 
+// Reverse first and second element of each pair in map
 vector <pair<int, string>> reverse_pairs(unordered_map<string, int> pairs) {
     vector <pair<int, string>> result;
     
@@ -46,9 +46,9 @@ vector <pair<int, string>> reverse_pairs(unordered_map<string, int> pairs) {
     return result;
 }
 
+// Count the frequency of each word
 unordered_map<string, int> count_occurences(vector<string> names) {
     unordered_map<string, int> result;
-    // Count the frequency of each word
     for (auto name : names) {
         result[name]++;
     }
